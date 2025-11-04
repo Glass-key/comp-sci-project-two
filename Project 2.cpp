@@ -20,7 +20,8 @@ void initializeBoards(int hidden[ROWS][COLS, char visible[ROWS][COLS])
 	  }
 }
 
-int placingTraps
+//Placing traps 
+int placingTraps(f
 
 
 int main(){
