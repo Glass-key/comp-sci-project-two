@@ -165,27 +165,111 @@ void playerMove(int hiddenBoard[ROWS][COLS], char visibleBoard[ROWS][COLS], int 
 	}
 
 }
+//checks for treasure
+bool checkTreasureFound(char hidden[][COLS], int row, int col) {
+	if (hidden[row][col] == 'T'){
+		hidden[row][col] = 'F'; 
+		return true;
+	}
+return false;
+}
+bool playerMove(char visbile[][COLS], char hidden[][COLS], int &score, vector<string> &history){
+int row, col;
+cout <<"\nYour turn! Enter row and then a column (0-4): ";
+cin >> row >> col;
 
+if(row < 0 || row >= ROWS || col < 0 || col >= COLS) {
+	cout << "Invalid . Enter numbers between 0 and 4." << endl;
+	return false;
+}
+if(checkTreaseFound(hidden, row, col)) {
+	cout << "You found a treasure!" << endl;
+	visible[row][col] = 'T';
+	score++;
+	history.push_back("player found treasure at (" + to_string(row) + ", " + to_string(col) + ")");
+}
+else{
+	cout << "You found no treasure." << endl;
+	visible[row][col] = 'X';
+	history.push_back("Player missed at(" + to_string(row) + ", " + to_string(col) + ")");
+	}
+
+	return true;
+}
+void computerMove(char visible[][COLS], char hidden[][COLS], int &compScore, vector<string> &history) {
+    int row, col;
+	do {
+		row = rand() % ROWS;
+		col = rand() % COLS;
+	}
+	While (visible[row][col] != '-' && visible[row][col] != 'X' && visbile[row][col] != 'T');
+
+	cout << "Computer chose: (" << row << ", " << col << ")\n";
+
+	if(checkTreasureFound(hidden, row, col)) {
+		cout << "Computer found a treasure!\n";
+		visible[row][col] = 'T';
+		compScore++;
+		history.push_back("Computer found treasure at (" + to_string(row) + ", " + to_string(col) + ")");
+	} else {
+		cout <<"Computer missed.\n";
+		visible[row][col] = 'X';
+		history.push_back("Computer missed at (" + to_string(row) + ", " + to_string(col) + ")");
+	}
+}
 
 int main()
 {
 
-	//Declaring and initializing Boards
-	int hiddenBoard[ROWS][COLS]
-	char visibleBoard[ROWS][COLS]
+	srand(time(0));
 
-	initializeBoards(hiddenBoard, visibleBoard); //Calls function for Initializing the boards 
-		
-	cout<<"Initial Board: "<<endl;
-	displayBoard(visibleBoard); //calls function to display visible board
+	char visible[ROWS][COLS];
+	char hidden[ROWS][COLS];
+	int playerScore = 0;
+	int computerScore = 0;
+	vector<string> history;
 
-	cout<<"(Hidden Board for testing purposes)" <<endl;
-	showHiddenBoard(hiddenBoard);
+	initalizeBoards(visible, hidden);
+
+	cout << "=====================================\n";
+	cout << "     ️   TREASURE HUNT GAME️\n";
+	cout << "=====================================\n";
+	cout << "Try to find more treasures than the computer!\n";
+
+	const int MAX_TURNS = 10;
+	int turns = 0;
+
+	while (turns < MAX_TURNS) 
+		{
+			displayBoard(Visible);
+
+			if (playerMove(visible, hidden, playerScore, history))
+				computerMove(visible, hidden, computerScore, history);
+
+			turns++;
+			cout << "\n--- Current Scores --\n";
+			cout << "Player: " << playerScore << " | Computer: " << computerScore << endl;
+		}
+	cout << "\n===== GAME OVER =====\n";
+	displayBoard(visible);
+	showHiddenBoard(hidden);
+	showHistory(history);
+
+	cout << "\nFinal Scores:\n";
+	cout << "Player: " << playerScore << "\nComputer: " << computerScore << endl;
+
+	if (playerScore > computerScore)
+		cout << "You win!" << endl;
+	else if (playerScore < computerScore)
+		cout << "Computer Wins!" << endl;
+	else
+		cout << "It's a tie!" << endl;
+	
 
 
 	//End Credits
 	cout<< "---------------------------------------------------------------------------------------"<<endl;
-	cout<< "Name: Britnie Rodriguez and Elise Mara"<<endl;
+	cout<< "Name: Britnie Rodriguez and Elise O'Mara"<<endl;
 	cout<< "EUID: bnr0128 and emo0094"<<endl;
 	cout<< "Emails: britnierodriguez@my.unt.edu and eliseomara@my.unt.edu"<<endl;
 	cout<<"Department: Computer science"<<endl;
